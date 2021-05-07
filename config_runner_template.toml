@@ -1,0 +1,26 @@
+# This file is the template for our runner configuration
+# Important: variables following the pattern "${VARIABLE_NAME}" will be
+# automatically replaced by the correct values during the entrypoint script
+
+concurrent = 10
+check_interval = 0
+
+[session_server]
+  session_timeout = 1800
+
+[[runners]]
+  name = "${RUNNER_NAME}"
+  url = "${GITLAB_URL}/"
+  token = "${RUNNER_AUTH_TOKEN}"
+  executor = "custom"
+  builds_dir = "/tmp/build"
+  cache_dir = "/tmp/cache"
+  [runners.custom]
+    config_exec = "/usr/local/bin/fargate-linux-amd64"
+    config_args = ["--config", "/etc/gitlab-runner/config_driver.toml", "custom", "config"]
+    prepare_exec = "/usr/local/bin/fargate-linux-amd64"
+    prepare_args = ["--config", "/etc/gitlab-runner/config_driver.toml", "custom", "prepare"]
+    run_exec = "/usr/local/bin/fargate-linux-amd64"
+    run_args = ["--config", "/etc/gitlab-runner/config_driver.toml", "custom", "run"]
+    cleanup_exec = "/usr/local/bin/fargate-linux-amd64"
+    cleanup_args = ["--config", "/etc/gitlab-runner/config_driver.toml", "custom", "cleanup"]
